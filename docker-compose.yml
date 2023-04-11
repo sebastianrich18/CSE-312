@@ -1,0 +1,19 @@
+version: '3'
+services:
+  server:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongoProject
+    environment:
+      WAIT_HOSTS: mongoProject:27017
+
+  mongoProject:
+    container_name: mongoProject
+    image: mongo
+    ports:
+      - "27017:27017"
+    # volumes:
+    #   - ./mongodata:/data/db # uncomment this to persist db data
+

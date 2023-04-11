@@ -1,0 +1,23 @@
+{
+  "name": "cse-312",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastianrich18/CSE-312.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebastianrich18/CSE-312/issues"
+  },
+  "homepage": "https://github.com/sebastianrich18/CSE-312#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socketio": "^1.0.0"
+  }
+}
