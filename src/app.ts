@@ -13,7 +13,7 @@ io.on('connection', (socket: socketio.Socket) => {
   console.log('A client connected!');
 
   // Handle socket events here
-  socket.on('my-event', (data) => {
+  socket.on('my-event', (data: any) => {
     console.log(`Received data: ${data}`);
   });
 
