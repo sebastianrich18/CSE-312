@@ -4,4 +4,4 @@ while (tsExample < 50) {
     tsExample += 10;
 }
 console.log(tsExample);
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=app.js.map
