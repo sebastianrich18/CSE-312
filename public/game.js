@@ -1,100 +1,99 @@
-let grid = [];
-let turn = "X";
-let playing = true;
-
-const socket = io();
-
-function setup() {
-    createCanvas(600, 600);
-    let resetButton = document.getElementById("reset");
-    resetButton.addEventListener("click", resetClicked);
-
-    textAlign(CENTER, CENTER);
-    for (let i = 0; i < 3; i++) {
-        grid[i] = [];
-        for (let j = 0; j < 3; j++) {
-            grid[i][j] = "";
-        }
-    }
-    frameRate(10);
-}
-
-function draw() {
-    background(220);
-    console.log("draw")
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            rect(i * 200, j * 200, 200, 200);
-            textSize(78);
-            text(grid[i][j], i * 200 + 100, j * 200 + 100);
-        }
-    }
-}
-
-function nextTurn() {
-    if (turn == "X") {
-        turn = "O";
-    } else {
-        turn = "X";
-    }
-    document.getElementById("player-turn").innerText = turn;
-    let winner = checkWinner();
-    if (winner != "") {
-        playerWon(winner);
-    }
-}
-
-
-function mouseClicked() {
-    if (!playing) {
-        return;
-    }
-    let x = floor(mouseX / 200);
-    let y = floor(mouseY / 200);
-    if (grid[x][y] == "") {
-        grid[x][y] = turn;
-    }
-    redraw();
-    nextTurn();
-}
-
-function playerWon(player) {
-    document.getElementById("winner").innerText = player + " wins!";
-    playing = false;
-}
-
-function checkWinner() {
-    // Check rows
-    for (let i = 0; i < 3; i++) {
-        if (grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2] && grid[i][0] != "") {
-            return grid[i][0];
-        }
-    }
-    // Check columns
-    for (let i = 0; i < 3; i++) {
-        if (grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i] && grid[0][i] != "") {
-            return grid[0][i];
-        }
-    }
-    // Check diagonals
-    if (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2] && grid[0][0] != "") {
-        return grid[0][0];
-    }
-    if (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0] && grid[0][2] != "") {
-        return grid[0][2];
-    }
-    return "";
-}
-
-function resetClicked() {
-    for (let i = 0; i < 3; i++) {
-        grid[i] = [];
-        for (let j = 0; j < 3; j++) {
-            grid[i][j] = "";
-        }
-    }
+class TicTacToe {
+    grid = [];
     turn = "X";
     playing = true;
-    document.getElementById("winner").innerText = "";
-    document.getElementById("player-turn").innerText = turn;
+
+    constructor() {
+        createCanvas(600, 600);
+        
+        textAlign(CENTER, CENTER);
+        for (let i = 0; i < 3; i++) {
+            this.grid[i] = [];
+            for (let j = 0; j < 3; j++) {
+                this.grid[i][j] = "";
+            }
+        }
+        console.log(this.grid)
+        let resetButton = document.getElementById("reset");
+        resetButton.addEventListener("click", this.resetBoard.bind(this));
+        frameRate(10);
+    }
+
+    show() {
+        background(220);
+        console.log("draw")
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                rect(i * 200, j * 200, 200, 200);
+                textSize(78);
+                text(this.grid[i][j], i * 200 + 100, j * 200 + 100);
+            }
+        }
+    }
+
+    nextTurn() {
+        if (this.turn == "X") {
+            this.turn = "O";
+        } else {
+            this.turn = "X";
+        }
+        document.getElementById("player-turn").innerText = this.turn;
+        let winner = this.checkWinner();
+        if (winner != "") {
+            this.playerWon(winner);
+        }
+    }
+
+
+    playerClicked(gridX, gridY) {
+        if (!this.playing) {
+            return;
+        }
+        if (this.grid[gridX][gridY] == "") {
+            this.grid[gridX][gridY] = this.turn;
+        }
+        redraw();
+        this.nextTurn();
+    }
+
+    playerWon(player) {
+        document.getElementById("winner").innerText = player + " wins!";
+        this.playing = false;
+    }
+
+    checkWinner() {
+        // Check rows
+        for (let i = 0; i < 3; i++) {
+            if (this.grid[i][0] == this.grid[i][1] && this.grid[i][1] == this.grid[i][2] && this.grid[i][0] != "") {
+                return this.grid[i][0];
+            }
+        }
+        // Check columns
+        for (let i = 0; i < 3; i++) {
+            if (this.grid[0][i] == this.grid[1][i] && this.grid[1][i] == this.grid[2][i] && this.grid[0][i] != "") {
+                return this.grid[0][i];
+            }
+        }
+        // Check diagonals
+        if (this.grid[0][0] == this.grid[1][1] && this.grid[1][1] == this.grid[2][2] && this.grid[0][0] != "") {
+            return this.grid[0][0];
+        }
+        if (this.grid[0][2] == this.grid[1][1] && this.grid[1][1] == this.grid[2][0] && this.grid[0][2] != "") {
+            return this.grid[0][2];
+        }
+        return "";
+    }
+
+    resetBoard() {
+        for (let i = 0; i < 3; i++) {
+            this.grid[i] = [];
+            for (let j = 0; j < 3; j++) {
+                this.grid[i][j] = "";
+            }
+        }
+        this.turn = "X";
+        this.playing = true;
+        document.getElementById("winner").innerText = "";
+        document.getElementById("player-turn").innerText = this.turn;
+    }
 }
