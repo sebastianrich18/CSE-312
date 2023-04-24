@@ -5,6 +5,8 @@ import http from 'http';
 const app = express();
 const server = http.createServer(app);
 
+const PORT: Number = 8080 || process.env.PORT;
+
 const io = new socketio.Server(server);
 
 app.use(express.static('public/'));
@@ -22,6 +24,6 @@ io.on('connection', (socket: socketio.Socket) => {
 });
 
 
-server.listen(8080, function () {
+server.listen(PORT, function () {
   console.log('Your app is listening on port 8080');
 });

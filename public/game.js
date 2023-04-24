@@ -2,6 +2,8 @@ let grid = [];
 let turn = "X";
 let playing = true;
 
+const socket = io();
+
 function setup() {
     createCanvas(600, 600);
     let resetButton = document.getElementById("reset");
