@@ -3,7 +3,7 @@
 
 
 ## Install Typescript
-run `npm i -g typescript` if this does not work run `sudo npm i -g typescript`
+run `npm install` if this does not work run `sudo npm i -g typescript`
 
 ## File Directory
 ### src
