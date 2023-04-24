@@ -2,6 +2,7 @@ class TicTacToe {
     grid = [];
     turn = "X";
     playing = true;
+    //sdag
 
     constructor() {
         createCanvas(600, 600);
