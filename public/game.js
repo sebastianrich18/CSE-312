@@ -22,7 +22,6 @@ class TicTacToe {
 
     show() {
         background(220);
-        console.log("draw")
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 rect(i * 200, j * 200, 200, 200);
