@@ -1,4 +1,5 @@
 class TicTacToe {
+    
     grid = [];
     turn = "X";
     playing = true;
