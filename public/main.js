@@ -20,7 +20,7 @@ function setup() {
 
         socket.on("playerMoved", function (data) {
             console.log("player " + data.player + " moved to " + data.x + ", " + data.y)
-            game.playerClicked(data.x, data.y);
+            game.playerClicked(data.x, data.y, data.player);
         })
 
         console.log("connected");

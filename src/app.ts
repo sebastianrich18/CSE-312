@@ -12,6 +12,7 @@ interface Game {
   p1socket: socketio.Socket;
   p2socket: socketio.Socket | null;
   board: number[][]; // 0 represents empty, 1 represents player 1, 2 represents player 2
+  turn: number;
 }
 
 let games: Game[] = [];
@@ -53,10 +54,15 @@ io.on('connection', (socket: socketio.Socket) => {
         console.log("game not found");
         return;
       }
+      if (game.turn != data.player) {
+        console.log("not your turn");
+        return;
+      }
       if (game.board[data.x][data.y] === 0) {
         game.board[data.x][data.y] = data.player;
-        game.p1socket.emit("playerMoved", game.board);
-        game.p2socket?.emit("playerMoved", game.board);
+        game.p1socket.emit("playerMoved", data);
+        game.p2socket?.emit("playerMoved", data);
+        game.turn = game.turn == 1 ? 2 : 1;
       }
       
   });
@@ -104,7 +110,8 @@ function createGame(player: socketio.Socket): Game {
     id: id.toString(),
     p1socket: player,
     p2socket: null, 
-    board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+    turn: 1
   }
   games.push(game);
   return game;

@@ -45,7 +45,7 @@ class TicTacToe {
     }
 
 
-    playerClicked(gridX, gridY) {
+    playerClicked(gridX, gridY, player) {
         if (!this.playing) {
             return;
         }
