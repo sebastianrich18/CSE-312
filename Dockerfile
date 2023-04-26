@@ -3,7 +3,7 @@ ENV HOME /root
 WORKDIR /root
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8008
 
 ENV IN_DOCKER Yes 
 
@@ -12,4 +12,4 @@ RUN chmod +x /wait
 
 RUN npm install
 
-CMD /wait && node app.js
+CMD /wait && npm run build && npm run start
