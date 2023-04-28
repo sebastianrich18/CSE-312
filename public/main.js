@@ -5,6 +5,7 @@ let gameFound = false;
 let gameId = "";
 let playerNumber = -1;
 const player_id = Math.floor(Math.random() * 1000000);
+let createLoby = document.getElementById('create-form')
 
 function setup() {
     game = new TicTacToe();
@@ -46,4 +47,10 @@ function findGame() {
 function sendClick(x, y) {
     socket.emit("playerClick", {x: x, y: y, gameId: gameId, player: playerNumber});
 }
+
+createLoby.addEventListener('submit', () =>{
+    socket = io()
+    const lobyId = Math.floor(10000 + Math.random() * 90000);
+    socket.emit('createLoby', lobyId)
+})
 

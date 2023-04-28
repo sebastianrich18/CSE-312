@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Tic Tac Toe</title>
-  </head>
-  <body>
-    <div>It is <span id="player-turn">X</span>'s turn</div>
-    <div id="winner"></div>
-    <button id="reset">Reset</button>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>Create Loby</div>
+    <form id="create-form" action="/game.html">
+        <input type="submit" name="createLoby" id="createLoby" value="create loby">    
+    </form>
+    <div>Join Loby</div>
+    <form action="/game.html">
+        <label for="lobyCode">Loby Code:</label>
+        <input type="number" name="lobyCode" id="lobyCode" minlength="5">
+    </form>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="game.js"></script>
-    <script src="main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-  </body>
+
+ 
+<script src="/socket.io/socket.io.js"></script>
+<script src="./main.js"></script>
+</body>
 </html>

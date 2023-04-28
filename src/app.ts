@@ -4,7 +4,6 @@ import http from 'http';
 
 const app = express();
 const server = http.createServer(app);
-//daily commit
 // let playerIdsToSocketId: Map<string, socketio.Socket> = new Map<string, socketio.Socket>();
 
 interface Game {
@@ -27,7 +26,6 @@ io.on('connection', (socket: socketio.Socket) => {
   console.log('A client connected!');
   console.log('Socket ID: ' + socket.id);
   // idsToSockets.set(socket.id, socket);
-
   socket.on('disconnect', () => {
     console.log('A client disconnected!');
     for (let game of games) {
@@ -43,7 +41,7 @@ io.on('connection', (socket: socketio.Socket) => {
   socket.on('findGame', (data: any) => {
     console.log(`looking for game: `);
     console.log(data);
-    let game = findGame(socket);
+    findGame(socket);
   });
 
   socket.on("playerClick", (data: any) => {
@@ -66,6 +64,11 @@ io.on('connection', (socket: socketio.Socket) => {
       }
       
   });
+
+  //Get loby Id when a player creates a loby
+  socket.on('createLoby', (lobyId) => {
+    console.log('loby Id: ', lobyId)
+  })
 
 
 });
