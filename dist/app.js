@@ -81,17 +81,18 @@ function getGameFromId(id) {
 function joinGame(player, lobyId) {
     let game = getGameFromId(lobyId);
     if (game == null) {
-        return null;
+        console.log('game doesnt exist');
+        player.emit('noGame', { failed: 'failed' });
+        return;
     }
     if (game.p2socket == null) {
         console.log('adding player 2 to loby: ' + game.id);
         game.p2socket = player;
         startGame(game);
-        return game;
     }
     else {
         console.log('loby is full');
-        return null;
+        player.emit('noGame', { failed: 'failed' });
     }
 }
 function findGame(player) {
