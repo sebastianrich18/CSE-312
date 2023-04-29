@@ -14,6 +14,15 @@ interface Game {
   turn: number;
 }
 
+//receives 5 digit code for lobbies
+app.use(express.json());
+app.post('/api/lobydata', (req, res) => {
+  const data = req.body;
+  const response = { message: 'Hello from the server!' };
+  res.json(response)
+  console.log(data)
+})
+
 let games: Game[] = [];
 
 const PORT: Number = parseInt(process.env.PORT!) || 8008;
