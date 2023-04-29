@@ -53,6 +53,18 @@ io.on('connection', (socket: socketio.Socket) => {
     findGame(socket);
   });
 
+  socket.on('joinGame', (joinId: any) => {
+    console.log('lobby joined with id: ')
+    console.log(joinId)
+    joinGame(socket, joinId.loby)
+  })
+
+  socket.on('createGame', (lobyId: any) => {
+    console.log('lobby created with id: ');
+    console.log(lobyId)
+    createGameNew(socket, lobyId.loby)
+  })
+
   socket.on("playerClick", (data: any) => {
       console.log("player clicked: ")
       console.log(data);
@@ -75,9 +87,9 @@ io.on('connection', (socket: socketio.Socket) => {
   });
 
   //Get loby Id when a player creates a loby
-  socket.on('createLoby', (lobyId) => {
+  /*socket.on('createLoby', (lobyId) => {
     console.log('loby Id: ', lobyId)
-  })
+  })*/
 
 
 });
@@ -96,6 +108,22 @@ function getGameFromId(id: string): Game | null {
   return null;
 }
 
+function joinGame(player: socketio.Socket, lobyId: string): Game | null{
+  let game = getGameFromId(lobyId)
+  if(game == null){
+    return null
+  }
+  if(game.p2socket == null){
+    console.log('adding player 2 to loby: ' + game.id)
+    game.p2socket = player
+    startGame(game)
+    return game;
+  }else{
+    console.log('loby is full')
+    return null;
+  }
+}
+
 function findGame(player: socketio.Socket): Game {
   if (games.length == 0) {
     let game = createGame(player);
@@ -112,6 +140,20 @@ function findGame(player: socketio.Socket): Game {
     game = createGame(player);
     return game;
   }
+}
+
+function createGameNew(player: socketio.Socket, lobyId: string): Game{
+
+  const game: Game = {
+    id: lobyId,
+    p1socket: player,
+    p2socket: null,
+    board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+    turn: 1
+  }
+  games.push(game)
+  return game;
+
 }
 
 

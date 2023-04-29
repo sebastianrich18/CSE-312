@@ -5,6 +5,9 @@ let gameFound = false;
 let gameId = "";
 let playerNumber = -1;
 const player_id = Math.floor(Math.random() * 1000000);
+let lobyId = sessionStorage.getItem('lobyId');
+let creator = JSON.parse(sessionStorage.getItem('createLoby')) //Json parse is necesary to convert string value to boolean
+
 
 
 function setup() {
@@ -25,6 +28,7 @@ function setup() {
         })
 
         console.log("connected");
+        console.log("loby id: " + lobyId)
         findGame();
     })
 }
@@ -41,10 +45,19 @@ function mouseClicked() {
 }
 
 function findGame() {
-    socket.emit("findGame", {player: player_id});
+    console.log(creator)
+    creator ? createGame() : joinGame()
+    //socket.emit("findGame", {player: player_id});   
 }
 
 function sendClick(x, y) {
     socket.emit("playerClick", {x: x, y: y, gameId: gameId, player: playerNumber});
 }
 
+function createGame() {
+    socket.emit("createGame", {loby: lobyId})
+}
+
+function joinGame() {
+    socket.emit("joinGame", {loby: lobyId})
+}

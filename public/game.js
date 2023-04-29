@@ -16,6 +16,8 @@ class TicTacToe {
         }
         console.log(this.grid)
         let resetButton = document.getElementById("reset");
+        let myLoby = document.getElementById('lobyCode')
+        myLoby.innerHTML = sessionStorage.getItem('lobyId')
         resetButton.addEventListener("click", this.resetBoard.bind(this));
         frameRate(10);
     }

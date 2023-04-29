@@ -1,19 +1,16 @@
 let createLoby = document.getElementById('create-form')
+let joinLoby = document.getElementById('join-form')
+let lobyId = -1
 
 createLoby.addEventListener('submit', (e) =>{
-    e.preventDefault()
-    const lobyId = Math.floor(10000 + Math.random() * 90000);
-    const data = {lobyCode: lobyId}
-    const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      };
-    fetch('/api/lobydata', options)
-    .then(response => response.json())
-    .then(res => console.log(res))
-    
+    lobyId = Math.floor(10000 + Math.random() * 90000);
+    sessionStorage.setItem('lobyId', lobyId)
+    sessionStorage.setItem('createLoby', true)   
+})
+
+joinLoby.addEventListener('submit', (e) => {
+    let joinId = document.getElementById('lobyCode').value
+    sessionStorage.setItem('lobyId', joinId)
+    sessionStorage.setItem('createLoby', false)   
 
 })
