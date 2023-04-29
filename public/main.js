@@ -30,7 +30,15 @@ function setup() {
         console.log("connected");
         console.log("loby id: " + lobyId)
         findGame();
+
+        socket.on('noGame', () => {
+            noGame()
+        })
     })
+}
+
+function noGame() {
+    window.location = '/'
 }
 
 function draw() {

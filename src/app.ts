@@ -47,11 +47,14 @@ io.on('connection', (socket: socketio.Socket) => {
   });
 
   // Handle socket events here
+
+  //NO LONGER USED
   socket.on('findGame', (data: any) => {
     console.log(`looking for game: `);
     console.log(data);
     findGame(socket);
   });
+  //NO LONGER USED ^^^
 
   socket.on('joinGame', (joinId: any) => {
     console.log('lobby joined with id: ')
@@ -86,12 +89,6 @@ io.on('connection', (socket: socketio.Socket) => {
       
   });
 
-  //Get loby Id when a player creates a loby
-  /*socket.on('createLoby', (lobyId) => {
-    console.log('loby Id: ', lobyId)
-  })*/
-
-
 });
 
 
@@ -108,22 +105,24 @@ function getGameFromId(id: string): Game | null {
   return null;
 }
 
-function joinGame(player: socketio.Socket, lobyId: string): Game | null{
+function joinGame(player: socketio.Socket, lobyId: string): void{
   let game = getGameFromId(lobyId)
   if(game == null){
-    return null
+    console.log('game doesnt exist')
+    player.emit('noGame', {failed:'failed'})
+    return
   }
   if(game.p2socket == null){
     console.log('adding player 2 to loby: ' + game.id)
     game.p2socket = player
     startGame(game)
-    return game;
   }else{
     console.log('loby is full')
-    return null;
+    player.emit('noGame', {failed:'failed'})
   }
 }
 
+//NO LONGER USED
 function findGame(player: socketio.Socket): Game {
   if (games.length == 0) {
     let game = createGame(player);
@@ -141,6 +140,7 @@ function findGame(player: socketio.Socket): Game {
     return game;
   }
 }
+//NO LONGER USED ^^^
 
 function createGameNew(player: socketio.Socket, lobyId: string): Game{
 
@@ -156,7 +156,7 @@ function createGameNew(player: socketio.Socket, lobyId: string): Game{
 
 }
 
-
+//NO LONGER USED
 function createGame(player: socketio.Socket): Game {
   const id = Math.floor(Math.random() * 1000000000);
   console.log(`creating game with id: ${id}`)
@@ -170,6 +170,8 @@ function createGame(player: socketio.Socket): Game {
   games.push(game);
   return game;
 }
+//NO LONGER USED ^^^
+
 
 function startGame(game: Game) {
   console.log("starting game with player 1")
