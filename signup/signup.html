@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Signup</title>
+    <link rel="stylesheet" type="text/css" href="signup.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head></br>
+
+<!--Line to run the Javascript functions-->
+<script src="signup.js"></script>
+
+<!--Button for "Back To Main Screen"-->
+<div class="back_button" id="back_button">
+    <button class="back_button" onclick="Redirect();"><span>&#8592;</span> Back To Main Screen</button>
+</div>
+
+<h1>CREATE AN ACCOUNT NOW!</h1>
+
+<!--Form for the account creation from the player-->
+<!--Data gets sent to the php server-->
+<div class="container">
+    <form action="" action="POST">
+        <label for ="username"></label>
+        <input type="text" minlength="3" maxlength="20" id="username" name="username" placeholder="Username" required />
+        <body style="color:black">Username must be between 3-20 characters</body></br></br>
+        <label for="password"></label>
+        <input type="password" minlength="6" maxlength="20" id="password" name="password" placeholder="Password" onkeyup='CheckPass();' required />
+        <body style="color:black; font-family:monospace">Password length must be between 6-20 characters</body></br></br>
+        <label for="confirm_password"></label>
+        <input type="password" minlength="6" maxlength="20" id="confirm_password" name="confirm_password" placeholder="Confirm Password" onkeyup='CheckPass();' required />
+        <span id="message"></span></br></br>
+        <input type="submit" id="submit" value="Sign Up">
+    </form>
+</div>
+</br>
+
+<script>
+    function showPopupMessage(message) {
+        alert(message);
+    }
+</script>
+
+<!--Link to login page if player already has an account-->
+<body style="color:black" onclick="">Already have an account? Log in <a href="">here</a></body></br></br>
+</html>
