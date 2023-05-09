@@ -4,16 +4,16 @@ services:
     build: .
     ports:
       - "8008:8008"
-    depends_on:
-      - mongoProject
-    environment:
-      WAIT_HOSTS: mongoProject:27017
+  #   depends_on:
+  #     - mongoProject
+  #   environment:
+  #     WAIT_HOSTS: mongoProject:27017
 
-  mongoProject:
-    container_name: mongoProject
-    image: mongo
-    ports:
-      - "27017:27017"
-    # volumes:
-    #   - ./mongodata:/data/db # uncomment this to persist db data
+  # mongoProject:
+  #   container_name: mongoProject
+  #   image: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   # volumes:
+  #   #   - ./mongodata:/data/db # uncomment this to persist db data
 

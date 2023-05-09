@@ -17,13 +17,68 @@
         <input type="number" name="lobyCode" id="lobyCode" minlength="5">
         <input type="submit" name="joinLoby" id="joinLoby" value="join lobby">    
     </form>
-    <a href="signup.html"><button>Sign up</button></a>
+    
+    <div id="login-status"></div>
 
+    <a href="signup.html" id="signup-link"><button>Sign up</button></a>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="lobbies.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkxehUBa037R_GOvr2Pi24GjciPD81KvQ",
+            authDomain: "tictactoe-c2eec.firebaseapp.com",
+            databaseURL: "https://tictactoe-c2eec-default-rtdb.firebaseio.com",
+            projectId: "tictactoe-c2eec",
+            storageBucket: "tictactoe-c2eec.appspot.com",
+            messagingSenderId: "689810806034",
+            appId: "1:689810806034:web:6bb11dd25d0edce2e8cfcb"
+        };
 
+        firebase.initializeApp(firebaseConfig);
 
- 
-<script src="/socket.io/socket.io.js"></script>
-<script src="lobbies.js"></script>
+        // Check for authentication cookie
+        const authCookie = getCookie("auth");
+        if (authCookie) {
+            console.log("Cookie found: ", authCookie)
+            const usersRef = firebase.database().ref("users");
+            console.log("usersRef: ", usersRef)
+            usersRef.once("value")
+            .then((snapshot) => {
+                const users = snapshot.val();
+                for (const username in users) {
+                    const { cookie, cookieSalt } = users[username];
+                    const expectedAuthCookie = `${cookieSalt}:${cookie}`;
+                    if (authCookie === expectedAuthCookie) {
+                        // Display logged in message and hide sign up button
+                        const loginStatus = document.getElementById("login-status");
+                        loginStatus.innerHTML = "Logged in as: " + username;
+                        const signupLink = document.getElementById("signup-link");
+                        signupLink.style.display = "none";
+                        break;
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error("Error retrieving user data: ", error);
+            });
+        }
+
+        // Function to get the value of a cookie by its name
+        function getCookie(name) {
+            const cookieString = decodeURIComponent(document.cookie);
+            const cookieArray = cookieString.split("; ");
+            for (let i = 0; i < cookieArray.length; i++) {
+                const cookie = cookieArray[i].split("=");
+                if (cookie[0] === name) {
+                    return cookie[1];
+                }
+            }
+            return null;
+        }
+    </script>
 </body>
 </html>
