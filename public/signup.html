@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Signup</title>
+  <link rel="stylesheet" type="text/css" href="signup.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+
+<!-- Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
+
+<script>
+  // Firebase configuration
+  const firebaseConfig = {
+  apiKey: "AIzaSyCkxehUBa037R_GOvr2Pi24GjciPD81KvQ",
+  authDomain: "tictactoe-c2eec.firebaseapp.com",
+  databaseURL: "https://tictactoe-c2eec-default-rtdb.firebaseio.com",
+  projectId: "tictactoe-c2eec",
+  storageBucket: "tictactoe-c2eec.appspot.com",
+  messagingSenderId: "689810806034",
+  appId: "1:689810806034:web:6bb11dd25d0edce2e8cfcb"
+};
+  firebase.initializeApp(firebaseConfig);
+
+  function submitForm(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const database = firebase.database();
+  const usersRef = database.ref('users');
+
+  // Check if the username already exists
+  const handler = usersRef.child(username).on('value', (snapshot) => {
+    usersRef.child(username).off('value', handler); // Detach the listener immediately
+    const user = snapshot.val();
+    console.log("devin");
+    if (user) {
+      // Username already exists, show an error message to the user
+      alert("Username already exists, please choose a different username.");
+      window.location.href = "signup.html";
+    } else {
+      // Username is available, add it to the database
+      const newUserRef = usersRef.child(username);
+      newUserRef.set({ username, password })
+        .then(() => {
+          // Redirect the user to the index.html page
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error("Error adding user data to database: ", error);
+        });
+    }
+  });
+}
+
+</script>
+
+<h1>CREATE AN ACCOUNT NOW! DO IT RIGHT NOW DO IT</h1>
+
+<!--Form for the account creation from the player-->
+<!--Data gets sent to the firebase server-->
+<div class="container">
+    <form id="signup-form" onsubmit="submitForm(event)">
+    <label for ="username"></label>
+    <input type="text" minlength="3" maxlength="20" id="username" name="username" placeholder="Username" required />
+    <body style="color:black">Username must be between 3-20 characters</body><br><br>
+    <label for="password"></label>
+    <input type="password" minlength="6" maxlength="20" id="password" name="password" placeholder="Password" required />
+    <body style="color:black; font-family:monospace">Password length must be between 6-20 characters</body><br><br>
+    <input type="submit" id="submit" value="Sign Up">
+  </form>
+</div>
+<br>
+
+<!--Link to login page if player already has an account-->
+<body style="color:black" onclick="">Already have an account? Log in <a href="">here</a></body><br><br>
+</html>

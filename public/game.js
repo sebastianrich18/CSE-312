@@ -42,6 +42,7 @@ class TicTacToe {
         document.getElementById("player-turn").innerText = this.turn;
         let winner = this.checkWinner();
         if (winner != "") {
+            console.log(winner)
             this.playerWon(winner);
         }
     }
