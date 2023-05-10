@@ -4,9 +4,9 @@ class TicTacToe {
     turn = "X";
     playing = true;
 
-    constructor() {
+    constructor(socket) {
         createCanvas(600, 600);
-        
+        this.socket = socket;
         textAlign(CENTER, CENTER);
         for (let i = 0; i < 3; i++) {
             this.grid[i] = [];
@@ -61,7 +61,11 @@ class TicTacToe {
 
     playerWon(player) {
         document.getElementById("winner").innerText = player + " wins!";
+        console.log("This playing: " + this.playing)
+        console.log("This: ", this)
         this.playing = false;
+        console.log("Socket ", socket)
+        this.socket.emit("gameOver", {winner: player });
     }
 
     checkWinner() {

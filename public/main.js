@@ -11,22 +11,26 @@ let creator = JSON.parse(sessionStorage.getItem('createLoby')) //Json parse is n
 
 
 function setup() {
-    game = new TicTacToe();
     socket = io();
+    game = new TicTacToe(socket);
     socket.on("connect", function () {
         socket.on("startGame", function (data) {
             console.log("game " + data.id + " found, you are player " + data.player);
             gameFound = true;
             gameId = data.id;
             playerNumber = data.player;
-            game = new TicTacToe();
+            game = new TicTacToe(socket);
         });
 
         socket.on("playerMoved", function (data) {
             console.log("player " + data.player + " moved to " + data.x + ", " + data.y)
             game.playerClicked(data.x, data.y, data.player);
         })
-
+        socket.on("gameOver", function (data) {
+            console.log("SOCKT EMIT GAME OVER")
+            const authCookie = getCookie("auth");
+            console.log("Winner: ", authCookie)
+        })
         console.log("connected");
         console.log("loby id: " + lobyId)
         findGame();

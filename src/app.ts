@@ -106,6 +106,7 @@ function getGameFromId(id: string): Game | null {
 }
 
 function joinGame(player: socketio.Socket, lobyId: string): void{
+  console.log('joining game: ' + player)
   let game = getGameFromId(lobyId)
   if(game == null){
     console.log('game doesnt exist')

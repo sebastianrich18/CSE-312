@@ -68,3 +68,21 @@ const handler = usersRef.child(username).on('value', (snapshot) => {
 function incrementWinCount(cookie) {
 
 }
+
+function addToLeaderboard(username, winCount) {
+    const database = firebase.database();
+    const leaderboardRef = database.ref('leaderboard');
+
+    leaderboardRef.child(username).set({
+        username,
+        winCount,
+    })
+    .then(() => {
+        // Redirect the user to the index.html page
+        window.location.href = "index.html";
+        alert("Account created successfully!")
+    })
+    .catch((error) => {
+        console.error("Error adding user data to database: ", error);
+    });
+}
