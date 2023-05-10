@@ -1,0 +1,23 @@
+
+body {
+    background-color: rgb(38, 38, 38);
+}
+h1 {
+    color: rgb(246, 137, 97);;
+    text-align: center;
+}
+h2 {
+    color: rgb(246, 137, 97);
+    text-align: center;
+}
+
+#login-form{
+    color: rgb(246, 137, 97);
+
+}
+body {
+    margin: auto;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
