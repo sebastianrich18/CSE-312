@@ -44,7 +44,6 @@ app.post('/api/signup', async (req, res) => {
     return;
   }
   else {
-    console.log("SHOULDNT BE HERE")
     const cookie = createCookie();
     createUser(req.body.username, req.body.password, cookie);
     res.cookie('auth', cookie);
@@ -52,6 +51,32 @@ app.post('/api/signup', async (req, res) => {
   }
 
 });
+
+app.post('/api/login', async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const userExists = await checkIfUserExists(username);
+  if (userExists) {
+    const passwordCorrect = await checkPassword(username, password);
+    if (passwordCorrect) {
+      console.log("PAssword correct")
+      const cookie = createCookie();
+      res.cookie('auth', cookie);
+      await saveCookie(username, cookie);
+      console.log(cookie)
+      res.json({ message: 'User created' });
+    }
+
+  }
+  else {
+    res.json({ message: 'Username does not exist' });
+    return;
+  }
+
+
+});
+
 
 app.get('/leaderboard', async (req, res) => {
   console.log(req)
@@ -276,8 +301,7 @@ function startGame(game: Game) {
 //Database stuff
 
 import admin from 'firebase-admin';
-import { CANCELLED } from 'dns';
-import { create } from 'domain';
+
 const serviceAccount = require('../public/privatekey.json');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -311,52 +335,6 @@ async function checkIfUserExists(username: string): Promise<boolean> {
 }
 
 
-// function signUp(username: string, password: string, res: express.Response): boolean{
-
-//   signUpSubmitted(username, password, res);
-//   return true;
-// }
-
-
-// function signUpSubmitted(username: string, password: string, res: express.Response) {
-
-//   const database = admin.database();
-//   const usersRef = database.ref('users');
-  
-//   // Check if the username already exists
-//   const handler = usersRef.child(username).on('value', (snapshot) => {
-//     usersRef.child(username).off('value', handler); // Detach the listener immediately
-//     const user = snapshot.val();
-//     console.log(user)
-//     if (user) {
-//       // Username already exists, show an error message to the user
-//       console.log("Username already exists");
-//     } else {
-//       // Username is available, add it to the database
-//       const { hashedString: cookie, salt: cookieSalt } = createCookie();
-//       const theSalt = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-//       const { hashedPassword, salt: passwordSalt } = hashPassword(password, theSalt);
-
-//       const newUserRef = usersRef.child(username);
-//       newUserRef.set({
-//         cookie,
-//         cookieSalt,
-//         username,
-//         password: hashedPassword,
-//         passwordSalt,
-//       })
-//         .then(() => {
-//           // Redirect the user to the index.html page
-//           console.log("User data added to database successfully");
-//           res.cookie('auth', `${cookieSalt}:${cookie}`, { maxAge: 24 * 60 * 60 * 1000 });
-//         })
-//         .catch((error) => {
-//           console.error("Error adding user data to database: ", error);
-//         });
-//     }
-//   });
-// }
-
 function createCookie() {
   const cookieValue = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   return cookieValue
@@ -373,6 +351,28 @@ function createHash(password: string, salt: string) : string{
   const hashedPassword = hash.digest('hex');
 
   return hashedPassword;
+}
+
+//Save the cookie to the user in the database, salted and hashed
+async function saveCookie(username: string, cookie: string){
+
+  const cookieSalt = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const hashedCookie = createHash(cookie, cookieSalt);
+
+  const database = admin.database();
+  const usersRef = database.ref('users');
+  const userRef = usersRef.child(username);
+  userRef.update({
+    cookie: hashedCookie,
+    cookieSalt: cookieSalt
+  })
+    .then(() => {
+      console.log("Cookie saved to database");
+    })
+    .catch((error) => {
+      console.error("Error saving cookie to database: ", error);
+    });
+
 }
 
 function createUser(username: string, password: string, cookie: string){
@@ -507,4 +507,30 @@ async function getLeaderboard(): Promise<LeaderboardEntry[]> {
         reject(error);
       });
   });
+}
+
+//Iterate through all users,if password equals hashed password stored in db, retur true
+async function checkPassword(username: string, password: string): Promise<boolean>{
+  const database = admin.database();
+  const usersRef = database.ref('users');
+  const userRef = usersRef.child(username);
+
+  return new Promise<boolean>((resolve, reject) => {
+    userRef.once('value')
+      .then((snapshot) => {
+        const user = snapshot.val();
+        if (user && user.password && user.passwordSalt) {
+          const hashedPassword = createHash(password, user.passwordSalt);
+          if (user.password === hashedPassword) {
+            resolve(true);
+          }
+        }
+        resolve(false);
+      })
+      .catch((error) => {
+        console.error("Error checking password: ", error);
+        reject(error);
+      });
+  });
+
 }
