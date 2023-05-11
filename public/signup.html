@@ -17,7 +17,7 @@
 
 function submitForm(event) {
     event.preventDefault();
-    const username = document.getElementById("username").value;
+    const username = document.getElementById("username").value.replace(/&/g, "&amp;").replace(/</g, "&lt").replace(/>/g, "&gt");
     const password = document.getElementById("password").value;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/signup");
