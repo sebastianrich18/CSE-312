@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const server = http.createServer(app);
 // let playerIdsToSocketId: Map<string, socketio.Socket> = new Map<string, socketio.Socket>();
+//Server documentation
 
 interface Game {
   id: string;
@@ -177,6 +178,7 @@ io.on('connection', (socket: socketio.Socket) => {
     }   
 });
 
+
 });
 
 
@@ -216,21 +218,22 @@ function checkWinnerBoard(board: number[][]): number {
   return 0;
 }
 
-function joinGame(player: socketio.Socket, lobyId: string): void{
-  console.log('joining game: ' + player)
+
+function joinGame(player: socketio.Socket, lobyId: string): void {
+
   let game = getGameFromId(lobyId)
-  if(game == null){
+  if (game == null) {
     console.log('game doesnt exist')
-    player.emit('noGame', {failed:'failed'})
+    player.emit('noGame', { failed: 'failed' })
     return
   }
-  if(game.p2socket == null){
+  if (game.p2socket == null) {
     console.log('adding player 2 to loby: ' + game.id)
     game.p2socket = player
     startGame(game)
-  }else{
+  } else {
     console.log('loby is full')
-    player.emit('noGame', {failed:'failed'})
+    player.emit('noGame', { failed: 'failed' })
   }
 }
 
@@ -254,7 +257,7 @@ function findGame(player: socketio.Socket): Game {
 }
 //NO LONGER USED ^^^
 
-function createGameNew(player: socketio.Socket, lobyId: string): Game{
+function createGameNew(player: socketio.Socket, lobyId: string): Game {
 
   const game: Game = {
     id: lobyId,
@@ -275,7 +278,7 @@ function createGame(player: socketio.Socket): Game {
   const game: Game = {
     id: id.toString(),
     p1socket: player,
-    p2socket: null, 
+    p2socket: null,
     board: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
     turn: 1
   }
