@@ -12,24 +12,43 @@
 <!-- Firebase Realtime Database -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
-<script src="backend.js"></script>
 
 <script>
   // Firebase configuration
-  const firebaseConfig = {
-  apiKey: "AIzaSyCkxehUBa037R_GOvr2Pi24GjciPD81KvQ",
-  authDomain: "tictactoe-c2eec.firebaseapp.com",
-  databaseURL: "https://tictactoe-c2eec-default-rtdb.firebaseio.com",
-  projectId: "tictactoe-c2eec",
-  storageBucket: "tictactoe-c2eec.appspot.com",
-  messagingSenderId: "689810806034",
-  appId: "1:689810806034:web:6bb11dd25d0edce2e8cfcb"
-};
-  firebase.initializeApp(firebaseConfig);
+//   const firebaseConfig = {
+//   apiKey: "AIzaSyCkxehUBa037R_GOvr2Pi24GjciPD81KvQ",
+//   authDomain: "tictactoe-c2eec.firebaseapp.com",
+//   databaseURL: "https://tictactoe-c2eec-default-rtdb.firebaseio.com",
+//   projectId: "tictactoe-c2eec",
+//   storageBucket: "tictactoe-c2eec.appspot.com",
+//   messagingSenderId: "689810806034",
+//   appId: "1:689810806034:web:6bb11dd25d0edce2e8cfcb"
+// };
+//   firebase.initializeApp(firebaseConfig);
 
-  function submitForm(event) {
-  event.preventDefault();
-  signUpSubmitted();
+//   function submitForm(event) {
+//   event.preventDefault();
+//   signUpSubmitted();
+// }
+function submitForm() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/signup");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // Redirect the user to the index.html page
+        console.log("Account created successfully!");
+        // alert("Account created successfully!")
+      } else {
+        console.error("Error adding user data to database: ", xhr.responseText);
+      }
+    };
+
+    xhr.send(JSON.stringify({ username, password }));
+    window.location.href = "index.html";
+
 }
   
 </script>

@@ -38,6 +38,14 @@ function setup() {
         socket.on('noGame', () => {
             noGame()
         })
+
+        socket.on("gameWon", function (message) {
+            alert(message);
+        });
+        
+        socket.on("gameLost", function (message) {
+            alert(message);
+        });
     })
 }
 
@@ -61,6 +69,7 @@ function findGame() {
     creator ? createGame() : joinGame()
     //socket.emit("findGame", {player: player_id});   
 }
+
 
 function sendClick(x, y) {
     socket.emit("playerClick", {x: x, y: y, gameId: gameId, player: playerNumber});

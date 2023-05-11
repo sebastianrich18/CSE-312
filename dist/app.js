@@ -1,4 +1,5 @@
 "use strict";
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -8,7 +9,28 @@ const socket_io_1 = __importDefault(require("socket.io"));
 const http_1 = __importDefault(require("http"));
 const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
+
+
+
+
+
 app.use(express_1.default.json());
+
+app.post('/api/signUp', (req, res) => {
+    console.log("Signup recieved")
+    const { username, password } = req.body;
+    const user = new User({ username, password });
+    user.save()
+      .then(() => {
+        console.log('User saved to database');
+        res.status(200).json({ message: 'User created successfully' });
+      })
+      .catch(error => {
+        console.error('Error saving user to database:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      });
+  });
+
 app.post('/api/lobydata', (req, res) => {
     const data = req.body;
     const response = { message: 'Hello from the server!' };
