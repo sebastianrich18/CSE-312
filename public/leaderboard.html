@@ -7,62 +7,35 @@
     <a href="index.html" id="index-link"><button>Back</button></a>
 
 	<h1>Leaderboard</h1>
-	<table>
+	<table id="leaderboard-table">
 		<tr>
 			<th>Rank</th>
 			<th>Player</th>
 			<th>Wins</th>
 		</tr>
-		<tr>
-			<td>1</td>
-			<td>John</td>
-			<td>1000</td>
-		</tr>
-		<tr>
-			<td>2</td>
-			<td>Jane</td>
-			<td>900</td>
-		</tr>
-		<tr>
-			<td>3</td>
-			<td>Bob</td>
-			<td>800</td>
-		</tr>
-		<tr>
-			<td>4</td>
-			<td>Alice</td>
-			<td>700</td>
-		</tr>
-		<tr>
-			<td>5</td>
-			<td>Sam</td>
-			<td>600</td>
-		</tr>
-		<tr>
-			<td>6</td>
-			<td>Tom</td>
-			<td>500</td>
-		</tr>
-		<tr>
-			<td>7</td>
-			<td>Sara</td>
-			<td>400</td>
-		</tr>
-		<tr>
-			<td>8</td>
-			<td>Mike</td>
-			<td>300</td>
-		</tr>
-		<tr>
-			<td>9</td>
-			<td>Emily</td>
-			<td>200</td>
-		</tr>
-		<tr>
-			<td>10</td>
-			<td>Max</td>
-			<td>100</td>
-		</tr>
 	</table>
+
+	<script>
+		// Make a request to app.ts to get the leaderboard data
+		fetch('/leaderboard')
+			.then(response => response.json())
+			.then(leaderboardData => {
+				// Populate the leaderboard table with the data
+				const leaderboardTable = document.getElementById('leaderboard-table');
+				leaderboardData.forEach((entry, index) => {
+					const row = leaderboardTable.insertRow();
+					const rankCell = row.insertCell(0);
+					const playerCell = row.insertCell(1);
+					const winsCell = row.insertCell(2);
+					rankCell.innerHTML = index + 1;
+					playerCell.innerHTML = entry.username;
+					winsCell.innerHTML = entry.wins;
+				});
+			})
+			.catch(error => {
+				console.error('Error getting leaderboard data:', error);
+			});
+	</script>
+
 </body>
 </html>

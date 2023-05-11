@@ -53,6 +53,19 @@ app.post('/api/signup', async (req, res) => {
 
 });
 
+app.get('/leaderboard', async (req, res) => {
+  console.log(req)
+  try {
+    const leaderboard = await getLeaderboard();
+    console.log("LDearboard results:")
+    console.log(leaderboard)
+    res.send(leaderboard);
+  } catch (error) {
+    console.error('Error getting leaderboard:', error);
+    res.sendStatus(500);
+  }
+});
+
 app.post('/increment-counter', async (req, res) => {
   const authCookie = req.cookies.auth; // get the value of the 'auth' cookie from the request
   // do something with the cookie value, such as incrementing a counter
@@ -384,8 +397,16 @@ function createUser(username: string, password: string, cookie: string){
         passwordSalt,
       })
       .then(() => {
-        // Redirect the user to the index.html page
-        console.log("User data added to database successfully");
+        // Add user to the leaderboard with 0 wins
+        const leaderboardRef = database.ref('leaderboard');
+        leaderboardRef.child(username).set(0)
+          .then(() => {
+            // Redirect the user to the index.html page
+            console.log("User data added to database successfully");
+          })
+          .catch((error) => {
+            console.error("Error adding user to leaderboard: ", error);
+          });
       })
       .catch((error) => {
         console.error("Error adding user data to database: ", error);
@@ -460,6 +481,7 @@ type LeaderboardEntry = {
 
 //Get wins into a list of objects
 async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+  console.log('Getting leaderboard');
   const database = admin.database();
   const leaderboardRef = database.ref('leaderboard');
 
@@ -470,13 +492,14 @@ async function getLeaderboard(): Promise<LeaderboardEntry[]> {
         snapshot.forEach((userSnapshot) => {
           const username = userSnapshot.key;
           const wins = userSnapshot.val();
-          if (username) { // check if username is not null
+          if (username) {
             leaderboard.push({
               username,
               wins,
             });
           }
         });
+        leaderboard.sort((a, b) => b.wins - a.wins); // sort by wins in descending order
         resolve(leaderboard);
       })
       .catch((error) => {
