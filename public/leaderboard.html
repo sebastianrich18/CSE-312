@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaderboard</title>
+</head>
+<body>
+    <a href="index.html" id="index-link"><button>Back</button></a>
+
+	<h1>Leaderboard</h1>
+	<table id="leaderboard-table">
+		<tr>
+			<th>Rank</th>
+			<th>Player</th>
+			<th>Wins</th>
+		</tr>
+	</table>
+
+	<script>
+		// Make a request to app.ts to get the leaderboard data
+		fetch('/leaderboard')
+			.then(response => response.json())
+			.then(leaderboardData => {
+				// Populate the leaderboard table with the data
+				const leaderboardTable = document.getElementById('leaderboard-table');
+				leaderboardData.forEach((entry, index) => {
+					const row = leaderboardTable.insertRow();
+					const rankCell = row.insertCell(0);
+					const playerCell = row.insertCell(1);
+					const winsCell = row.insertCell(2);
+					rankCell.innerHTML = index + 1;
+					playerCell.innerHTML = entry.username;
+					winsCell.innerHTML = entry.wins;
+				});
+			})
+			.catch(error => {
+				console.error('Error getting leaderboard data:', error);
+			});
+	</script>
+
+</body>
+</html>

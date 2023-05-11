@@ -11,22 +11,26 @@ let creator = JSON.parse(sessionStorage.getItem('createLoby')) //Json parse is n
 
 
 function setup() {
-    game = new TicTacToe();
     socket = io();
+    game = new TicTacToe(socket);
     socket.on("connect", function () {
         socket.on("startGame", function (data) {
             console.log("game " + data.id + " found, you are player " + data.player);
             gameFound = true;
             gameId = data.id;
             playerNumber = data.player;
-            game = new TicTacToe();
+            game = new TicTacToe(socket);
         });
 
         socket.on("playerMoved", function (data) {
             console.log("player " + data.player + " moved to " + data.x + ", " + data.y)
             game.playerClicked(data.x, data.y, data.player);
         })
-
+        socket.on("gameOver", function (data) {
+            console.log("SOCKT EMIT GAME OVER")
+            const authCookie = getCookie("auth");
+            console.log("Winner: ", authCookie)
+        })
         console.log("connected");
         console.log("loby id: " + lobyId)
         findGame();
@@ -34,6 +38,35 @@ function setup() {
         socket.on('noGame', () => {
             noGame()
         })
+
+        socket.on("gameWon", function (message) {
+            const authCookie = getCookie("auth");
+            console.log("Auth Cookie: ", authCookie);
+
+            fetch("/increment-counter", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ auth: authCookie })
+              })
+              .then(response => {
+                if (response.ok) {
+                  console.log("Counter incremented successfully");
+                } else {
+                  console.log("Failed to increment counter");
+                }
+              })
+              .catch(error => {
+                console.log("Error:", error);
+              });
+
+            alert(message);
+        });
+
+        socket.on("gameLost", function (message) {
+            alert(message);
+        });
     })
 }
 
@@ -58,6 +91,7 @@ function findGame() {
     //socket.emit("findGame", {player: player_id});   
 }
 
+
 function sendClick(x, y) {
     socket.emit("playerClick", {x: x, y: y, gameId: gameId, player: playerNumber});
 }
@@ -68,4 +102,12 @@ function createGame() {
 
 function joinGame() {
     socket.emit("joinGame", {loby: lobyId})
+}
+
+
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }

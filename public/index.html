@@ -1,26 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-    <div>Create Lobby</div>
-    <form id="create-form" action="/game.html">
-        <input type="submit" name="createLoby" id="createLoby" value="create lobby">    
-    </form>
-    <div>Join Lobby</div>
-    <form id="join-form" action="/game.html">
-        <label for="lobyCode">Lobby Code:</label>
-        <input type="number" name="lobyCode" id="lobyCode" minlength="5">
-        <input type="submit" name="joinLoby" id="joinLoby" value="join lobby">    
-    </form>
+  <div>Create Lobby</div>
+  <form id="create-form" action="/game.html">
+    <input type="submit" name="createLoby" id="createLoby" value="create lobby">
+  </form>
+  <div>Join Lobby</div>
+  <form id="join-form" action="/game.html">
+    <label for="lobyCode">Lobby Code:</label>
+    <input type="number" name="lobyCode" id="lobyCode" minlength="5">
+    <input type="submit" name="joinLoby" id="joinLoby" value="join lobby">
+  </form>
 
+  <div id="login-status"></div>
 
- 
-<script src="/socket.io/socket.io.js"></script>
-<script src="lobbies.js"></script>
+  <a href="leaderboard.html" id="leaderboard-link"><button>View Leaderboard</button></a>
+<a href="signup.html" id="signup-link"><button>Sign Up</button></a>
+<a href="login.html" id="login-link"><button>Log In</button></a>
+<button id="logout" onclick="logOut()">Log Out</button>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="lobbies.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
+  <script>
+    // Use fetch to call endpoint and update DOM based on login status
+
+    function checkLogin() {
+        console.log('Check log in client')
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/check-login");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.setRequestHeader("Authorization", `Bearer ${getCookie("access_token")}`);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const loginStatusDiv = document.getElementById('login-status');
+
+            if (response.isLoggedIn) {
+                loginStatusDiv.innerHTML = `Logged in as ${response.username}`;
+                const signUpLink = document.getElementById('signup-link');
+                signUpLink.parentNode.removeChild(signUpLink);
+                const logInLink = document.getElementById('login-link');
+                logInLink.parentNode.removeChild(logInLink);
+            } else {
+                loginStatusDiv.innerHTML = 'Not logged in';
+                const logOutLink = document.getElementById('logout');
+                logOutLink.parentNode.removeChild(logOutLink);
+            }
+            } else {
+            console.error("Error checking login status: ", xhr.responseText);
+            }
+        };
+        xhr.send();
+        }
+        function getCookie(name) {
+            const cookieString = decodeURIComponent(document.cookie);
+            const cookieArray = cookieString.split("; ");
+            for (let i = 0; i < cookieArray.length; i++) {
+                const cookie = cookieArray[i].split("=");
+                if (cookie[0] === name) {
+                    console.log(cookie[1])
+                    return cookie[1];
+                }
+            }
+            return null;
+        }
+        function logOut() {
+            // Delete the auth cookie
+            document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            
+            // Redirect to index.html
+            window.location.href = "/";
+        }
+
+        window.onload = function () {
+        checkLogin();
+        };
+  </script>
 </body>
 </html>

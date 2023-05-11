@@ -6,7 +6,6 @@ class TicTacToe {
 
     constructor() {
         createCanvas(600, 600);
-        
         textAlign(CENTER, CENTER);
         for (let i = 0; i < 3; i++) {
             this.grid[i] = [];
@@ -42,9 +41,12 @@ class TicTacToe {
         document.getElementById("player-turn").innerText = this.turn;
         let winner = this.checkWinner();
         if (winner != "") {
+            console.log(winner)
             this.playerWon(winner);
         }
     }
+
+    
 
 
     playerClicked(gridX, gridY, player) {

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="signup.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js"></script>
+<!-- Firebase Realtime Database -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.3/firebase-database.js"></script>
+
+<script>
+function submitForm(event) {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/login");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // Redirect the user to the index.html page
+        console.log("Account logged in successfully!");
+        // alert("Account created successfully!")
+      } else {
+        console.error("Error adding user data to database: ", xhr.responseText);
+      }
+    };
+
+    xhr.send(JSON.stringify({ username, password }));
+    setTimeout(function() {
+            window.location.href = "index.html";
+        }, 500);
+}
+  
+</script>
+<a href="index.html" id="index-link"><button>Back</button></a>
+
+<h1>login if u want</h1>
+
+<!--Form for the account creation from the player-->
+<!--Data gets sent to the firebase server-->
+<div class="container">
+    <form id="signup-form" onsubmit="submitForm(event)">
+    <label for ="username"></label>
+    <input type="text" minlength="3" maxlength="20" id="username" name="username" placeholder="Username" required />
+    <br><br>
+    <label for="password"></label>
+    <input type="password" minlength="6" maxlength="20" id="password" name="password" placeholder="Password" required />
+    <input type="submit" id="submit" value="Log in">
+  </form>
+</div>
+<br>
+
+<!--Link to login page if player already has an account-->
+</html>

@@ -1,0 +1,41 @@
+body {
+    background-color: white;
+}
+h1 {
+    color: black;
+    text-align: center;
+}
+body {
+    margin: auto;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+.back_button {
+    text-align: left;
+    border-color: black;
+}
+
+.container {
+    margin: auto;
+    display: block;
+    width: 100%
+}
+input[type="text"] {
+    width: 50%;
+    max-width: 70%;
+    padding: 1%;
+    margin: auto;
+    display: block;
+    border-color: black;
+}
+input[type="password"] {
+    width: 50%;
+    padding: 1%;
+    margin: auto;
+    display: block;
+    border-color: black;
+}
+input[type="submit"] {
+    border-color: black;
+}
