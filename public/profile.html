@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="signup.css">
+
+</head>
+<body>
+    <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="leaderboard.html">Leaderboard</a></li>
+        </ul>
+      </nav>
+	<h1 id="profile-username"></h1>
+	<p id="profile-wins"></p>
+
+	<script>
+		// Retrieve the username from the URL
+		const urlParams = new URLSearchParams(window.location.search);
+		const username = urlParams.get('username');
+
+		// Update the profile page with the username
+		const profileUsername = document.getElementById('profile-username');
+		profileUsername.textContent = `Username: ${username}`;
+
+		// Make a request to app.ts to get the player's data
+		const xhr = new XMLHttpRequest();
+		xhr.open('POST', '/profile');
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				const playerData = JSON.parse(xhr.responseText);
+				// Update the profile page with the player's wins
+				const profileWins = document.getElementById('profile-wins');
+				profileWins.textContent = `Wins: ${playerData.wins}`;
+			} else {
+				console.error('Error getting player data:', xhr.statusText);
+			}
+		};
+		xhr.onerror = function() {
+			console.error('Request failed');
+		};
+		xhr.send(JSON.stringify({ username: username }));
+	</script>
+
+</body>
+</html>

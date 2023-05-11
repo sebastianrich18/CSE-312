@@ -1,0 +1,76 @@
+/* Reset some default styles */
+body, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #202020;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    background-color: #333;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a,
+nav ul li button {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    transition: 0.3s;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+nav ul li a:hover,
+nav ul li button:hover {
+    color: #bbb;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #fff;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    color: #fff;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #bbb;
+}

@@ -101,6 +101,19 @@ app.post('/increment-counter', async (req, res) => {
   res.json({ message: 'Counter incremented' });
 });
 
+app.post('/profile', async (req, res) => {
+  const username = req.body.username;
+  const wins = await getWins(username);
+
+  if (wins === null) {
+    res.status(404).json({ message: 'Player not found' });
+  } else {
+    res.status(200).json({ wins: wins });
+  }
+});
+
+
+
 
 
 let games: Game[] = [];
@@ -536,4 +549,28 @@ async function checkPassword(username: string, password: string): Promise<boolea
       });
   });
 
+}
+
+//Function for returning a players wins:
+async function getWins(username: string): Promise<number> {
+  const database = admin.database();
+  const leaderboardRef = database.ref('leaderboard');
+  const userRef = leaderboardRef.child(username);
+  console.log("leaderboard user ref: ", userRef)
+  return new Promise<number>((resolve, reject) => {
+    userRef.once('value')
+      .then((snapshot) => {
+        const user = snapshot.val();
+        console.log("user: ", user)
+        if (user) {
+
+          resolve(user);
+        }
+        resolve(0);
+      })
+      .catch((error) => {
+        console.error("Error getting wins: ", error);
+        reject(error);
+      });
+  });
 }

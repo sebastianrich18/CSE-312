@@ -33,14 +33,19 @@ function submitForm(event) {
     };
 
     xhr.send(JSON.stringify({ username, password }));
-    window.location.href = "index.html";
-
+    setTimeout(function() {
+            window.location.href = "index.html";
+        }, 500);
 }
   
 </script>
-<a href="index.html" id="index-link"><button>Back</button></a>
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+  </ul>
+</nav>
 
-<h1>CREATE AN ACCOUNT NOW! DO IT RIGHT NOW DO IT</h1>
+<h1>CREATE AN ACCOUNT</h1>
 
 <!--Form for the account creation from the player-->
 <!--Data gets sent to the firebase server-->
@@ -48,15 +53,13 @@ function submitForm(event) {
     <form id="signup-form" onsubmit="submitForm(event)">
     <label for ="username"></label>
     <input type="text" minlength="3" maxlength="20" id="username" name="username" placeholder="Username" required />
-    <body style="color:black">Username must be between 3-20 characters</body><br><br>
+    <body style="color:rgb(255, 255, 255)">Username must be between 3-20 characters</body><br><br>
     <label for="password"></label>
     <input type="password" minlength="6" maxlength="20" id="password" name="password" placeholder="Password" required />
-    <body style="color:black; font-family:monospace">Password length must be between 6-20 characters</body><br><br>
+    <body style="color:rgb(255, 255, 255); font-family:monospace">Password length must be between 6-20 characters</body><br><br>
     <input type="submit" id="submit" value="Sign Up">
   </form>
 </div>
 <br>
 
-<!--Link to login page if player already has an account-->
-<body style="color:black" onclick="">Already have an account? Log in <a href="">here</a></body><br><br>
 </html>
