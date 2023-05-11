@@ -61,11 +61,12 @@ function setup() {
                 console.log("Error:", error);
               });
 
-            alert(message);
+            // alert(message);
         });
 
         socket.on("gameLost", function (message) {
-            alert(message);
+            console.log('Game Lost');
+            // alert(message);
         });
     })
 }
