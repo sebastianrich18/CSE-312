@@ -40,9 +40,30 @@ function setup() {
         })
 
         socket.on("gameWon", function (message) {
+            const authCookie = getCookie("auth");
+            console.log("Auth Cookie: ", authCookie);
+
+            fetch("/increment-counter", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ auth: authCookie })
+              })
+              .then(response => {
+                if (response.ok) {
+                  console.log("Counter incremented successfully");
+                } else {
+                  console.log("Failed to increment counter");
+                }
+              })
+              .catch(error => {
+                console.log("Error:", error);
+              });
+
             alert(message);
         });
-        
+
         socket.on("gameLost", function (message) {
             alert(message);
         });
@@ -81,4 +102,12 @@ function createGame() {
 
 function joinGame() {
     socket.emit("joinGame", {loby: lobyId})
+}
+
+
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }

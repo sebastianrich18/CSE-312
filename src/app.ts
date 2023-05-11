@@ -28,7 +28,6 @@ app.post('/api/lobydata', (req, res) => {
 
 
 app.get('/api/check-login', async (req, res) => {
-  console.log("Logged in check")
   const isLoggedIn = await loggedInAs(req.cookies.auth);
 
   if (isLoggedIn != null) {
@@ -52,6 +51,15 @@ app.post('/api/signup', async (req, res) => {
     res.json({ message: 'User created' });
   }
 
+});
+
+app.post('/increment-counter', async (req, res) => {
+  const authCookie = req.cookies.auth; // get the value of the 'auth' cookie from the request
+  // do something with the cookie value, such as incrementing a counter
+  console.log("app.ts increment called")
+  await incrementWin(authCookie);
+  console.log(authCookie)
+  res.json({ message: 'Counter incremented' });
 });
 
 
@@ -120,7 +128,7 @@ io.on('connection', (socket: socketio.Socket) => {
         game.turn = game.turn == 1 ? 2 : 1;
         let winner = checkWinnerBoard(game.board);
         if (winner != 0) {
-            if (winner == 1) {
+            if (winner == 1) {                
                 game.p1socket.emit("gameWon", "Congrats! You won!");
                 game.p2socket?.emit("gameLost", "Sorry, you lost.");
             } else {
@@ -395,7 +403,6 @@ function createUser(username: string, password: string, cookie: string){
 
 
 async function loggedInAs(cookie: string): Promise<string | null> {
-  console.log("Logged in as function")
   const database = admin.database();
   const usersRef = database.ref('users');
   
@@ -415,6 +422,65 @@ async function loggedInAs(cookie: string): Promise<string | null> {
       })
       .catch((error) => {
         console.error("Error checking if user is logged in: ", error);
+        reject(error);
+      });
+  });
+}
+
+async function incrementWin(cookie: string){
+  const username = await loggedInAs(cookie);
+  console.log('Increment win for ' + username)
+
+  //Increment the leaderboard for the user, if user is not in the leaderboard collection, add them and set wins to 1. Username: wins
+  const database = admin.database();
+  const leaderboardRef = database.ref('leaderboard');
+  if (username != null) {
+    const userRef = leaderboardRef.child(username);
+    userRef.once('value')
+      .then((snapshot) => {
+        const user = snapshot.val();
+        if (user) {
+          // User is already in the leaderboard, increment the wins
+          userRef.set(parseInt(user) + 1);
+        } else {
+          // User is not in the leaderboard, add them
+          userRef.set(1);
+        }
+      })
+
+  }
+
+}
+
+
+type LeaderboardEntry = {
+  username: string;
+  wins: number;
+}
+
+//Get wins into a list of objects
+async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+  const database = admin.database();
+  const leaderboardRef = database.ref('leaderboard');
+
+  return new Promise<LeaderboardEntry[]>((resolve, reject) => {
+    leaderboardRef.once('value')
+      .then((snapshot) => {
+        const leaderboard: LeaderboardEntry[] = [];
+        snapshot.forEach((userSnapshot) => {
+          const username = userSnapshot.key;
+          const wins = userSnapshot.val();
+          if (username) { // check if username is not null
+            leaderboard.push({
+              username,
+              wins,
+            });
+          }
+        });
+        resolve(leaderboard);
+      })
+      .catch((error) => {
+        console.error("Error getting leaderboard: ", error);
         reject(error);
       });
   });
