@@ -49,7 +49,7 @@ app.post('/api/signup', async (req, res) => {
       return;
     }
   }
-  
+
   console.log("new user: " + username)
   const exists = await checkIfUserExists(username);
   if (exists) {
@@ -139,7 +139,7 @@ app.post('/profile', async (req, res) => {
 
 let games: Game[] = [];
 
-const PORT: Number = parseInt(process.env.PORT!) || 8009;
+const PORT: Number = parseInt(process.env.PORT!) || 8008;
 
 const io = new socketio.Server(server);
 
