@@ -39,14 +39,26 @@ app.get('/api/check-login', async (req, res) => {
 });
 
 app.post('/api/signup', async (req, res) => {
-  const exists = await checkIfUserExists(req.body.username);
+  const username = req.body.username;
+
+  const htmlSpecialChars = ['&', '<', '>', '"', "'", '/', '`', '=', '+', '!'];
+
+  for (let char of htmlSpecialChars) {
+    if (username.includes(char)) {
+      res.json({ message: 'Username contains invalid characters' });
+      return;
+    }
+  }
+  
+  console.log("new user: " + username)
+  const exists = await checkIfUserExists(username);
   if (exists) {
     res.json({ message: 'Username already exists' });
     return;
   }
   else {
     const cookie = createCookie();
-    createUser(req.body.username, req.body.password, cookie);
+    createUser(username, req.body.password, cookie);
     res.cookie('auth', cookie);
     res.json({ message: 'User created' });
   }
@@ -57,6 +69,15 @@ app.post('/api/login', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
+  const htmlSpecialChars = ['&', '<', '>', '"', "'", '/', '`', '=', '+', '!'];
+
+  for (let char of htmlSpecialChars) {
+    if (username.includes(char)) {
+      res.json({ message: 'Username contains invalid characters' });
+      return;
+    }
+  }
+
   const userExists = await checkIfUserExists(username);
   if (userExists) {
     const passwordCorrect = await checkPassword(username, password);
@@ -65,7 +86,7 @@ app.post('/api/login', async (req, res) => {
       const cookie = createCookie();
       res.cookie('auth', cookie);
       await saveCookie(username, cookie);
-      console.log(cookie)
+      console.log("cookie: ", cookie)
       res.json({ message: 'User created' });
     }
 
@@ -118,7 +139,7 @@ app.post('/profile', async (req, res) => {
 
 let games: Game[] = [];
 
-const PORT: Number = parseInt(process.env.PORT!) || 8008;
+const PORT: Number = parseInt(process.env.PORT!) || 8009;
 
 const io = new socketio.Server(server);
 

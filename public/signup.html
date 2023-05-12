@@ -17,7 +17,7 @@
 
 function submitForm(event) {
     event.preventDefault();
-    const username = document.getElementById("username").value.replace(/&/g, "&amp;").replace(/</g, "&lt").replace(/>/g, "&gt");
+    const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/signup");
@@ -26,16 +26,22 @@ function submitForm(event) {
       if (xhr.status === 200) {
         // Redirect the user to the index.html page
         console.log("Account created successfully!");
-        // alert("Account created successfully!")
+        let res = JSON.parse(xhr.responseText);
+        console.log(res['message']);
+        if (res['message'] == "User created") {
+          window.location.href = "index.html";
+        } else {
+          alert(res.message);
+        }
       } else {
         console.error("Error adding user data to database: ", xhr.responseText);
       }
     };
 
     xhr.send(JSON.stringify({ username, password }));
-    setTimeout(function() {
-            window.location.href = "index.html";
-        }, 500);
+    // setTimeout(function() {
+    //         window.location.href = "index.html";
+    //     }, 500);
 }
   
 </script>
