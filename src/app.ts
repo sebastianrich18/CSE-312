@@ -6,6 +6,11 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const server = http.createServer(app);
+
+const PORT: Number = parseInt(process.env.PORT!) || 8009;
+
+const io = new socketio.Server(server);
+
 // let playerIdsToSocketId: Map<string, socketio.Socket> = new Map<string, socketio.Socket>();
 //Server documentation
 
@@ -139,9 +144,7 @@ app.post('/profile', async (req, res) => {
 
 let games: Game[] = [];
 
-const PORT: Number = parseInt(process.env.PORT!) || 8008;
 
-const io = new socketio.Server(server);
 
 app.use(express.static('public/'));
 
